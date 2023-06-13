@@ -2,7 +2,7 @@
 import RPi.GPIO as GPIO
 import time
 
-red = 17; green = 27; blue = 22 # ground 역살
+red = 17; green = 27; blue = 22 # ground 역할
 
 # 초기화
 GPIO.setmode(GPIO.BCM)
