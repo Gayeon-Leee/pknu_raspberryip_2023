@@ -16,13 +16,12 @@ GPIO.setup(buzzPin, GPIO.OUT)
 GPIO.setup(trigPin, GPIO.OUT)
 GPIO.setup(echoPin, GPIO.IN)
 
-melody = [261, 293, 329, 349, 392, 440, 493, 523]
 buzz = GPIO.PWM(buzzPin, 440)
 
 class WindowClass(QMainWindow) :
 	def __init__(self):
 		super().__init__()
-		uic.loadUi("control.ui", self)
+		uic.loadUi("control2.ui", self)
 
 		self.btnled_On.clicked.connect(self.btnledOn_clicked)
 		self.btnled_Off.clicked.connect(self.btnledOff_clicked)
@@ -43,17 +42,15 @@ class WindowClass(QMainWindow) :
 		print("btnbuzz_ON Clicked!")
 		self.buzzer_thread = Thread(target=self.buzzer_on)
 		self.buzzer_thread.start()	
-		#btnbuzzOn_clidked 함수 진행 중에 off 함수 진행하면 부저 중지하기 위해 스레드 사용
-
-	def btnbuzzOff_clicked(self):
-		self.lbldistance.setText("Distance : cm")
-		GPIO.cleanup()
-		print("btnbuzz_Off Clicked!")
+		#btnbuzzOn_clidked 함수 진행 중에 off 함수 진행하면  중지하기 위해 스레드 사용
 
 	def buzzer_on(self):
+		start = 0
+		stop = 0
+		
 		while True:
 			GPIO.output(trigPin, True)
-			time.sleep(0.00001)
+			time.sleep(0.01)
 			GPIO.output(trigPin, False)
 
 			while GPIO.input(echoPin) == 0:
@@ -72,7 +69,11 @@ class WindowClass(QMainWindow) :
 				time.sleep(2)
 				self.lbldistance.setText("Warning!! Distance : %.1f cm" %distance)
 				buzz.stop()
-			
+				
+	def btnbuzzOff_clicked(self):
+		GPIO.output(trigPin, False)
+		self.lbldistance.setText("Distance : cm")
+		print("btnbuzz_Off Clicked")
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
 	mywindow = WindowClass()
